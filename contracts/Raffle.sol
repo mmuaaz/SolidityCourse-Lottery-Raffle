@@ -90,7 +90,7 @@ constructor(address vrfCoordinatorV2, uint256 entranceFee, bytes32 gasLane, uint
      * 3. at least 1 player has signed up for the raffle  
      * 4. Implicity, your subscription is funded with LINK.
      */
-    function checkUpkeep(bytes /*calldata*/ memory// as this function has syntax that needs to coorelating with the one we have imported so we need to incorporate the same 
+    function checkUpkeep(bytes memory/*calldata*/// as this function has syntax that needs to coorelating with the one we have imported so we need to incorporate the same 
     //elements like "returns" "bytes memory"
          /* checkData */
     ) public view override returns (bool upkeepNeeded, bytes memory /*performData*/) //performData is used if we want to have "checkupKeep" do something 
@@ -100,7 +100,7 @@ constructor(address vrfCoordinatorV2, uint256 entranceFee, bytes32 gasLane, uint
         bool timePassed = ((block.timestamp - s_lastTimeStamp) > i_interval);
         bool hasPlayers = s_players.length > 0;
         bool hasBalance = address(this).balance > 0;
-        /*bool*/ upkeepNeeded = (isOpen && timePassed && hasPlayers && hasBalance);
+        /*bool*/ upkeepNeeded = (timePassed && isOpen && hasBalance && hasPlayers);
          return (upkeepNeeded, "0x0"); // can we comment this out?
         }
 function performUpkeep(bytes calldata /* performData, (if we had this in the checkUpKeep then we pass it here) */)/*requestRandomWinner*/ 
@@ -125,7 +125,8 @@ external override{
         i_callbackGasLimit, //the limit of how much gas to use for callback request to your SC's fulfillRandmWords() function
         NUM_WORDS
     );
-    emit RequestedRaffleWinner(requestId);
+    emit RequestedRaffleWinner(requestId);  // we later discovered that, vrfCoordinator Mock is also emiting an event where 2nd 
+    //parameter is actually "requestId", so we dont have to emit this EVENT here, but we did anyways as an example to learn EVENTS
 
 }
 function fulfillRandomWords/*same as fulfillRandomNumbers*/(
@@ -137,7 +138,7 @@ function fulfillRandomWords/*same as fulfillRandomNumbers*/(
     address payable recentWinner = s_players[indexOfWinner]; // getting the address of "indexofWinner"
     s_recentWinner = recentWinner;
     s_players = new address payable[](0); // after announcing the winner, we need to reset the "players" array to zero
-    s_raffleState = RaffleState.OPEN;
+    s_raffleState = RaffleState.OPEN; 
     s_lastTimeStamp = block.timestamp;
     (bool success, ) = recentWinner.call{value: address(this).balance}("");
     // we could also write the above code as:  require(success, "Transfer failed");
@@ -173,6 +174,9 @@ function fulfillRandomWords/*same as fulfillRandomNumbers*/(
     }
     function getRequestConfirmations() public pure returns (uint256) {
         return REQUEST_CONFIRMATIONS;
+    }
+    function getInterval() public view returns(uint256) {
+        return i_interval;
     }
 
 }

@@ -1,14 +1,15 @@
 const { network, ethers } = require("hardhat")
-const { developmentChains, networkConfig } = require("../helper-hardhat.config")
-const { verify } = require("../helper-hardhat.config")
+const { developmentChains, networkConfig } = require("../helper-hardhat-config")
+const { verify } = require("../helper-hardhat-config")
 // const { verify } = require("../utils/verify")
-const FUND_AMOUNT = "100000000000000000" //ethers.utils.parseEther("2")
+const FUND_AMOUNT = /*"100000000000000000"*/ ethers.utils.parseEther("1")
 
 module.exports = async ({ getNamedAccounts, deployments }) => {
     const { deploy, log } = deployments
     const { deployer } = await getNamedAccounts()
     const chainId = network.config.chainId
-    let vrfCoordinatorV2Address, subsciptionId
+    // let vrfCoordinatorV2Address, subsciptionId
+    let vrfCoordinatorV2Address, subscriptionId
 
     if (developmentChains.includes(network.name)) {
         // const vrfCoordinatorV2Mock = await ethers.getContract("VRFCoordinatorV2Mock")
@@ -28,7 +29,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     const entranceFee = networkConfig[chainId]["entranceFee"]
     const gasLane = networkConfig[chainId]["gasLane"]
     const callbackGasLimit = networkConfig[chainId]["callbackGasLimit"]
-    const interval = networkConfig[chainId]["interval"]
+    const interval = networkConfig[chainId]["keepersUpdateInterval"]
 
     const args = [
         vrfCoordinatorV2Address,
