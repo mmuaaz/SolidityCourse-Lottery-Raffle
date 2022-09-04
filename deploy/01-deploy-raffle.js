@@ -8,7 +8,10 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     const { deploy, log } = deployments
     const { deployer } = await getNamedAccounts()
     const chainId = network.config.chainId
+<<<<<<< HEAD
     // let vrfCoordinatorV2Address, subsciptionId
+=======
+>>>>>>> 91087637bb0309782a4021daacd20a3c70ddb3d5
     let vrfCoordinatorV2Address, subscriptionId
 
     if (developmentChains.includes(network.name)) {
@@ -17,7 +20,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         vrfCoordinatorV2Address = vrfCoordinatorV2Mock.address
         //  const transactionResponse = await vrfCoordinatorV2Mock.createSubscription()
         const transactionResponse = await vrfCoordinatorV2Mock.createSubscription()
-        const transactionReceipt = await transactionResponse.wait(1)
+        const transactionReceipt = await transactionResponse.wait()
         subscriptionId = transactionReceipt.events[0].args.subId // watch "how to work with events in hardhat" to know about this
         // Fund the subscription
         // Normally you fund the subscription with LINK token:
