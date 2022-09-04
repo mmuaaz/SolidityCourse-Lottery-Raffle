@@ -8,10 +8,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     const { deploy, log } = deployments
     const { deployer } = await getNamedAccounts()
     const chainId = network.config.chainId
-<<<<<<< HEAD
     // let vrfCoordinatorV2Address, subsciptionId
-=======
->>>>>>> 91087637bb0309782a4021daacd20a3c70ddb3d5
     let vrfCoordinatorV2Address, subscriptionId
 
     if (developmentChains.includes(network.name)) {
