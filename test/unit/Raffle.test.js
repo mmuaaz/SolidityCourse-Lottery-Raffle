@@ -28,7 +28,7 @@ const { developmentChains, networkConfig } = require("../../helper-hardhat-confi
                   assert.equal(raffleState, "0")
                   assert.equal(
                       interval.toString(),
-                      networkConfig[network.config.chainId]["interval"]
+                      networkConfig[network.config.chainId]["keepersUpdateInterval"]
                   )
               })
           })
@@ -54,7 +54,7 @@ const { developmentChains, networkConfig } = require("../../helper-hardhat-confi
               })
               it("doesn't allow entrance when raffle is calculating", async () => {
                   await raffle.enterRaffle({ value: raffleEntranceFee })
-                  /* for a documentation of the methods below, go here: https://hardhat.org/hardhat-network/reference*/
+                  // for a documentation of the methods below, go here: https://hardhat.org/hardhat-network/reference
                   await network.provider.send("evm_increaseTime", [interval.toNumber() + 1])
                   await network.provider.request({ method: "evm_mine", params: [] })
                   // we pretend to be a keeper for a second
